@@ -1,2 +1,2 @@
-# voyagemapper-restservice
-Node Based Rest Service
+# eatanddo-restservice
+Rest service, built with Node &amp; Tedious 
