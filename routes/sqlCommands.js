@@ -10,12 +10,14 @@ var poolConfig = {
 };
 
 var connectionConfig = {
-    userName: 'eatandoData',
-    password: '123ABC',
-    server:   'WS030',
-    database: 'EatAndDoNew',
+    
+    userName:  process.env.USER_NAME     ?  process.env.USER_NAME.trim()     : 'rest.client',
+    password:  process.env.USER_PASSWORD ?  process.env.USER_PASSWORD.trim() : '35vnbvASXX#575345dm7',
+    server:    process.env.SERVER_NAME   ?  process.env.SERVER_NAME.trim()   : 'WS030',
 
     options: {
+
+        database: process.env.DATABASE_NAME ?  process.env.DATABASE_NAME.trim()   :   'VoyageMapper',
 
         connectTimeout:  15000,
         requestTimeout: 480000,
@@ -25,18 +27,21 @@ var connectionConfig = {
         rowCollectionOnRequestCompletion: true,
         encrypt:                          true
     }
-};
+}; 
 
 var pool = new ConnectionPool(poolConfig, connectionConfig);
 
+let errors = {}
+
 pool.on('error', function (err) {
   console.error(err);
+  errors.latest = err;
 });
 
 function convertRowsToJSON(rows) {
 
   var result = [];
-
+ 
   rows.forEach(function (row) {
 
     var rowResult = {};
@@ -93,5 +98,7 @@ exports.processQuery = function processQuery(procedureName, parameterValues){
   });
 
 }
+
+exports.errors = errors;
 
 

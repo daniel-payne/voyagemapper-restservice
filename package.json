@@ -1,17 +1,22 @@
 {
-  "name": "EatAndDoWebService",
+  "name": "VoyageMapperDoWebService",
   "version": "1.0.0",
-  "description": "EatAndDo Web Service",
+  "description": "Voyage Mapper Web Service",
   "main": "server.js",
   "author": {
     "name": "Keldan Systems",
     "email": "info@keldan.co.uk"
   },
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daniel-payne/voyagemapper-restservice.git"
+  },
   "dependencies": {
-    "body-parser": "^1.13.3",
-    "busboy": "^0.2.9",
-    "express": "^4.13.3",
-    "tedious": "^1.12.2",
-    "tedious-connection-pool": "^1.0.4"
+    "body-parser": "^1.17.1",
+    "busboy": "^0.2.14",
+    "express": "^4.15.2",
+    "tedious": "^2.0.0",
+    "tedious-connection-pool": "^1.0.5"
   }
 }
