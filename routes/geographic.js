@@ -30,7 +30,7 @@ routes.get('/', function (req, res) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-routes.get('/find/contexts', urlencodedParser, function (req, res) {
+routes.get('/find/context', urlencodedParser, function (req, res) {
 
   sqlCommands.processQuery('Geographic.FindContext', [
 
@@ -43,9 +43,21 @@ routes.get('/find/contexts', urlencodedParser, function (req, res) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-routes.get('/get/contexts', urlencodedParser, function (req, res) {
+routes.get('/list/contexts', urlencodedParser, function (req, res) {
 
-  sqlCommands.processQuery('Geographic.GetContexts', [
+  sqlCommands.processQuery('Geographic.ListContexts', [
+
+    { name: 'List ', value: req.query.list   },
+
+  ]).then(returnData.bind(res), returnError.bind(res))
+
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+routes.get('/list/countries', urlencodedParser, function (req, res) {
+
+  sqlCommands.processQuery('Geographic.ListCountries', [
 
     { name: 'List ', value: req.query.list   },
 
