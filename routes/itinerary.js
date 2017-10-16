@@ -10,6 +10,7 @@ var rawParser        = bodyParser.raw();
 var textParser       = bodyParser.text();
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
+
 function returnData(data) {
   this.header("Content-Type", "application/json");
   this.send(data)
@@ -25,7 +26,82 @@ var routes = express.Router();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 routes.get('/', function (req, res) {
-  res.send('{ data: "geographic", serverTime: "' + (new Date()).toISOString().slice(0, 19) + '"}');
+  res.send('{ data: "itinerary", serverTime: "' + (new Date()).toISOString().slice(0, 19) + '"}');
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+routes.get('/open/session', function (req, res) {
+
+  const b64Authorization  = req.query.authorization
+  const authorization     = Buffer.from(b64Authorization.replace('Basic ',''), 'base64').toString("ascii") 
+  const authorizations    = authorization.split(':') 
+  const email             = authorizations[0]
+  const password          = authorizations[1]
+
+  sqlCommands.processQuery('Itinerary.OpenSession', [
+
+    { name: 'EMail',         value: email          },
+    { name: 'Password',      value: password       },
+
+  ]).then(returnData.bind(res), returnError.bind(res))
+  
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+routes.get('/refresh/session', function (req, res) {
+
+  sqlCommands.processQuery('Itinerary.RefreshSession', [
+
+    { name: 'SessionGUID',   value: req.headers.session        }, 
+
+  ]).then(returnData.bind(res), returnError.bind(res))
+
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+routes.get('/close/session', function (req, res) {
+
+  sqlCommands.processQuery('Itinerary.CloseSession', [
+    
+    { name: 'SessionGUID',   value: req.query.code        }, 
+
+  ]).then(returnData.bind(res), returnError.bind(res))
+
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+routes.get('/regiester/person', function (req, res) {
+
+  const b64Authorization  = req.headers.authorization
+  const authorization     = Buffer.from(b64Authorization.replace('Basic ',''), 'base64').toString("ascii") 
+  const authorizations    = authorization.split(':') 
+  const email             = authorizations[0]
+  const password          = authorizations[1]
+
+  sqlCommands.processQuery('Itinerary.RegiesterPerson', [
+
+    { name: 'EMailAddress ', value: email          },
+    { name: 'Password',      value: password       },
+
+  ]).then(returnData.bind(res), returnError.bind(res))
+
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+routes.post('/update/context', function (req, res) {
+
+  sqlCommands.processQuery('Itinerary.UpdateContext', [
+    
+    { name: 'SessionGUID',   value: req.query.code             }, 
+    { name: 'ContextID',     value: req.query.context          }, 
+
+  ]).then(returnData.bind(res), returnError.bind(res))
+
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,20 +126,6 @@ routes.post('/add/point', urlencodedParser, function (req, res) {
     { name: 'TravelReference',   value: req.body.travelReference   },
     { name: 'BookingReference',  value: req.body.bookingReference  },
     { name: 'AdditionalDetails', value: req.body.additionalDetails },
-
-  ]).then(returnData.bind(res), returnError.bind(res))
-
-});
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-routes.get('/retrieve/points', urlencodedParser, function (req, res) {
-
-  const ipAddress = req.connection.remoteAddress
-
-  sqlCommands.processQuery('Itinerary.RetrievePoints', [
-
-    { name: 'SessionGUID ',      value: req.headers.session       },
 
   ]).then(returnData.bind(res), returnError.bind(res))
 

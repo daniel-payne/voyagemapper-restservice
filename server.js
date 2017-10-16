@@ -4,11 +4,9 @@ var app        = express();
 var bodyParser = require('body-parser');
 var router     = express.Router();
 
-var securityRoutes   = require('./routes/security').routes;
 var geographicRoutes = require('./routes/geographic').routes;
 var riskRoutes       = require('./routes/risk').routes;
 var itineraryRoutes  = require('./routes/itinerary').routes;
-
 
 var allowCrossDomain = function (req, res, next) {
 
@@ -24,7 +22,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(bodyParser.text())
 
-app.use('/security',   securityRoutes  )
 app.use('/geographic', geographicRoutes)
 app.use('/risk',       riskRoutes      )
 app.use('/itinerary',  itineraryRoutes )

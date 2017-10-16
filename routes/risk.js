@@ -11,6 +11,7 @@ var textParser       = bodyParser.text();
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 function returnData(data) {
+  console.log(data)
   this.header("Content-Type", "application/json");
   this.send(data)
 }
